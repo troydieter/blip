@@ -18,14 +18,24 @@
     display: block;
   }
   .legend {
-    text-align: right;
-    padding-right: 2em;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 2em;
     font-family: Arial;
     color: #e0e0e0;
   }
-  .legend span {
+  .legend img {
+    width: 300px;
+    height: 40px;
+  }
+  .legend-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+  }
+  .legend-text span {
     padding-left: 2em;
   }
   .dnslegend form {
@@ -50,19 +60,22 @@
   </style>
 </head>
 <body>
-<div class='legend'>
-  <a href='https://github.com/troydieter/blip'>What's this?</a>
-  <span id='locallegend'></span>
-  <span id='internetlegend'></span>
-  <span class='dnslegend'>
-    <form>
-      <label for="wantdns">
-      <input type='checkbox' name='wantdns' id='wantdns'>
-      DNS
-      </label>
-    </form>
-  </span>
-</div>
+  <div class='legend'>
+    <img src='https://www.troydieter.com/logos/logo.png' alt='Legend Image'>
+    <div class="legend-text">
+      <a href='https://github.com/troydieter/blip'>What's this?</a>
+      <span id='locallegend'></span>
+      <span id='internetlegend'></span>
+      <span class='dnslegend'>
+        <form>
+          <label for="wantdns">
+          <input type='checkbox' name='wantdns' id='wantdns'>
+          DNS
+          </label>
+        </form>
+      </span>
+    </div>
+  </div>
 <canvas class='blipchart' id='hires'></canvas>
 <canvas class='blipchart' id='lores'></canvas>
 <canvas class='blipchart' id='vlores'></canvas>
