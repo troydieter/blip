@@ -344,7 +344,7 @@ async function pickBestSite(hosts, minNeeded, maxParallel) {
 // that you like my program.  So, you know, whatever.
 //     -- apenwarr, 2013/04/26
 async function pickMlabSite() {
-  let response = await fetch('https://mlab-ns.appspot.com/ndt_ssl?policy=all');
+  let response = await fetch('https://locate.measurementlab.net/ndt');
 
   // We want the selected hostname to be reasonably stable across page reloads
   // from a single location, even on separate devices.  To help with this,
