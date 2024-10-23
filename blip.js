@@ -16,12 +16,13 @@
  */
 'use strict';
 
-const localColor = 'rgba(0,128,0,0.8)';
-const internetColor = 'rgba(0,0,255,0.8)';
-const dnsColor = 'rgba(0,0,0,1.0)';
+const localColor = 'rgba(255,153,0,0.8)'; // AWS orange (for local)
+const internetColor = 'rgba(38,132,255,0.8)'; // AWS blue (for internet pings)
+const dnsColor = 'rgba(255,255,255,1.0)'; // White (for DNS pings, keeping this same for clarity)
 
-const vbarColor = 'rgba(128,128,128,1.0)';
-const vbarEraseColor = 'rgba(255,255,255,1.0)'
+const vbarColor = 'rgba(92,92,92,1.0)'; // Dark gray (for vertical bars to blend with dark background)
+const vbarEraseColor = 'rgba(19,19,19,1.0)'; // Darker gray/near black (to erase on a dark background)
+
 
 let running = true;
 let wantDns = false;
@@ -71,7 +72,7 @@ function BlipCanvas(canvas, width) {
 
   this.drawYAxis = function() {
     let labels = [2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000];
-    this.ctx.fillStyle = 'black';
+    this.ctx.fillStyle = 'white'; // White text for dark mode
     this.ctx.textBaseline = 'middle';
     this.ctx.textAlign = 'right';
     this.ctx.font = '32px Arial';
@@ -98,38 +99,27 @@ function BlipCanvas(canvas, width) {
 
     // draw the new bar
     this.ctx.fillStyle = vbarColor;
-    this.ctx.fillRect(new_x + this.xofs + 1, 0,
-                      4, this.canvas.height);
+    this.ctx.fillRect(new_x + this.xofs + 1, 0, 4, this.canvas.height);
 
     // wipe out the old bar
     this.ctx.fillStyle = vbarEraseColor;
-    this.ctx.fillRect(this.current_x + this.xofs, 0,
-                      x_inc + 1, this.canvas.height);
+    this.ctx.fillRect(this.current_x + this.xofs, 0, x_inc + 1, this.canvas.height);
     if (new_x < this.current_x) {
-      this.ctx.fillRect(this.xofs, 0,
-                        new_x - 1, this.canvas.height);
+      this.ctx.fillRect(this.xofs, 0, new_x - 1, this.canvas.height);
     }
     this.current_x = new_x;
   };
 
   this.msecToY = function(msecs) {
-    return this.canvas.height -
-        (Math.log(msecs) * this.canvas.height / log_msecMax);
+    return this.canvas.height - (Math.log(msecs) * this.canvas.height / log_msecMax);
   };
 
   this.drawBlip = function(color, startTime, endTime, minlatency, width) {
     let msecs = endTime - startTime;
     if (msecs < minlatency) {
-      // impossibly short; that implies we're not actually reaching the
-      // remote end, probably because we're entirely offline
       lastBotch = endTime;
     }
     if (endTime > 2100 && endTime - lastBotch < 2100) {
-      // if there were any "offline" problems recently, there might be
-      // a bit of jitter where some of the requests are a bit slower than
-      // the impossible timeout, but that doesn't mean it's working yet.
-      // So stop reporting for a minimum amount of time.  During that time,
-      // we just want to show an error.
       msecs = msecMax;
     }
     let y = this.msecToY(msecs);
@@ -137,7 +127,7 @@ function BlipCanvas(canvas, width) {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(x - width, y - 15, 1 + width, 31);
     if (msecs >= msecMax) {
-      this.ctx.fillStyle = '#f00';
+      this.ctx.fillStyle = '#ff4500'; // Bright red for errors in dark mode
       this.ctx.fillRect(x - 1 - width, y - 5, 2 + width, 20);
     }
   };
@@ -156,11 +146,18 @@ function addBlip(color, url, minlatency) {
 function gotBlip(color, url, minlatency, startTime) {
   const endTime = now();
   const blipWidth = url ? 1 : 3;
+
+  // Get the current timestamp in HH:MM:SS format
+  const timestamp = new Date().toLocaleTimeString();
+
+  // Log the timestamp
+  console.log(`[${timestamp}] Blip recorded with color: ${color}, URL: ${url}, start time: ${startTime}, end time: ${endTime}`);
+
   c1.drawBlip(color, startTime, endTime, minlatency, blipWidth);
   c2.drawBlip(color, startTime, endTime, minlatency, blipWidth);
   c3.drawBlip(color, startTime, endTime, minlatency, blipWidth);
   addBlip(color, url, minlatency);
-};
+}
 
 if (AbortSignal.timeout === undefined) {
   const controller = new AbortController();

@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-  <title>Blip</title>
+  <title>Internet Latency Monitor</title>
   <style>
   * {
     margin: 0;
@@ -10,9 +10,11 @@
   body {
     margin: 0;
     padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
   }
   .blipchart {
-    background: #fff;
+    background: #1e1e1e;
     display: block;
   }
   .legend {
@@ -21,6 +23,7 @@
     padding-top: 1em;
     padding-bottom: 1em;
     font-family: Arial;
+    color: #e0e0e0;
   }
   .legend span {
     padding-left: 2em;
@@ -32,15 +35,23 @@
     margin: -2em;
     padding: 2em;
     font-weight: bold;
+    color: #e0e0e0;
   }
   .dnslegend form label:hover {
-    background: #ff8;
+    background: #444;
+  }
+  a {
+    color: #1e90ff;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
   }
   </style>
 </head>
 <body>
 <div class='legend'>
-  <a href='https://github.com/apenwarr/blip'>What's this?</a>
+  <a href='https://github.com/troydieter/blip'>What's this?</a>
   <span id='locallegend'></span>
   <span id='internetlegend'></span>
   <span class='dnslegend'>
