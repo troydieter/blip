@@ -146,18 +146,11 @@ function addBlip(color, url, minlatency) {
 function gotBlip(color, url, minlatency, startTime) {
   const endTime = now();
   const blipWidth = url ? 1 : 3;
-
-  // Get the current timestamp in HH:MM:SS format
-  const timestamp = new Date().toLocaleTimeString();
-
-  // Log the timestamp
-  console.log(`[${timestamp}] Blip recorded with color: ${color}, URL: ${url}, start time: ${startTime}, end time: ${endTime}`);
-
   c1.drawBlip(color, startTime, endTime, minlatency, blipWidth);
   c2.drawBlip(color, startTime, endTime, minlatency, blipWidth);
   c3.drawBlip(color, startTime, endTime, minlatency, blipWidth);
   addBlip(color, url, minlatency);
-}
+};
 
 if (AbortSignal.timeout === undefined) {
   const controller = new AbortController();
